@@ -1,6 +1,3 @@
-<?php $this->extend('layouts/main'); ?>
-
-<?php $this->section('content'); ?>
 <div id="subscriptionPage" class="fade-in">
     <!-- Header -->
     <div class="mb-6">
@@ -61,4 +58,3 @@
         </div>
     </div>
 </div>
-<?php $this->endSection(); ?>

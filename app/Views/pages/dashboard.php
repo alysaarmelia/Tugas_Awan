@@ -1,6 +1,3 @@
-<?php $this->extend('layouts/main'); ?>
-
-<?php $this->section('content'); ?>
 <div id="dashboardPage" class="fade-in">
     <!-- Stats cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -129,6 +126,4 @@
                 <p class="text-sm">Loading activity...</p>
             </div>
         </div>
-    </div>
 </div>
-<?php $this->endSection(); ?>

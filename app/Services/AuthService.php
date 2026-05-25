@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Libraries\JwtLibrary;
 use App\Models\UserModel;
 use App\Models\ActivityLogModel;
+use App\Models\SubscriptionModel;
 
 /**
  * AuthService — handles user registration, login, logout, and token management.
@@ -13,13 +14,15 @@ class AuthService
 {
     private UserModel $userModel;
     private ActivityLogModel $logModel;
+    private SubscriptionModel $subscriptionModel;
     private JwtLibrary $jwt;
 
     public function __construct()
     {
-        $this->userModel = new UserModel();
-        $this->logModel  = new ActivityLogModel();
-        $this->jwt       = new JwtLibrary();
+        $this->userModel         = new UserModel();
+        $this->logModel          = new ActivityLogModel();
+        $this->subscriptionModel = new SubscriptionModel();
+        $this->jwt               = new JwtLibrary();
     }
 
     /**
@@ -46,6 +49,14 @@ class AuthService
             'username'     => $username,
             'email'        => $email,
             'password_hash' => password_hash($password, PASSWORD_BCRYPT),
+        ]);
+
+        // Auto-create free subscription so users can rent storage immediately
+        $this->subscriptionModel->insert([
+            'user_id'    => $userId,
+            'tier'       => 'free',
+            'status'     => 'active',
+            'start_date' => date('Y-m-d H:i:s'),
         ]);
 
         // Log registration

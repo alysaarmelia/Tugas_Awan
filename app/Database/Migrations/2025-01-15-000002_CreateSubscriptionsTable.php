@@ -10,37 +10,37 @@ class CreateSubscriptionsTable extends Migration
     {
         $this->forge->addField([
             'id' => [
-                'type'           => 'INT',
+                'type'           => 'INTEGER',
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
             'user_id' => [
-                'type'     => 'INT',
+                'type'     => 'INTEGER',
                 'unsigned' => true,
                 'unique'   => true,
             ],
             'tier' => [
-                'type'       => 'ENUM',
-                'constraint' => ['free', 'pro', 'enterprise'],
-                'default'   => 'free',
+                'type'    => 'VARCHAR',
+                'constraint' => 20,
+                'default' => 'free',
             ],
             'status' => [
-                'type'       => 'ENUM',
-                'constraint' => ['active', 'cancelled', 'expired'],
-                'default'   => 'active',
+                'type'    => 'VARCHAR',
+                'constraint' => 20,
+                'default' => 'active',
             ],
             'start_date' => [
-                'type' => 'DATETIME',
+                'type' => 'TIMESTAMP',
                 'null' => false,
             ],
             'end_date' => [
-                'type' => 'DATETIME',
+                'type' => 'TIMESTAMP',
                 'null' => true,
             ],
         ]);
         $this->forge->addPrimaryKey('id');
         $this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE');
-        $this->forge->createTable('subscriptions');
+        $this->forge->createTable('subscriptions', true);
 
         $this->db->query('CREATE INDEX idx_subscriptions_user_id ON subscriptions(user_id)');
         $this->db->query('CREATE INDEX idx_subscriptions_status ON subscriptions(status)');

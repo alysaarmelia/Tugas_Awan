@@ -1,6 +1,3 @@
-<?php $this->extend('layouts/main'); ?>
-
-<?php $this->section('content'); ?>
 <div id="storagePage" class="fade-in">
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
@@ -102,4 +99,3 @@
         <div id="rentError" class="hidden mt-3 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600 text-center"></div>
     </div>
 </div>
-<?php $this->endSection(); ?>

@@ -24,7 +24,8 @@ class ActivityLogModel extends Model
         int $limit = 20,
         ?string $actionType = null
     ): array {
-        $builder = $this->where('user_id', $userId);
+        $builder = $this->builder();
+        $builder->where('user_id', $userId);
 
         if ($actionType) {
             $builder->where('action', $actionType);
@@ -32,14 +33,24 @@ class ActivityLogModel extends Model
 
         $builder->orderBy('created_at', 'DESC');
 
-        $result = [
-            'logs' => $builder->get($limit, ($page - 1) * $limit)->getResult(),
-            'total' => $builder->countAllResults(false),
+        $total = $builder->countAllResults();
+        $totalPages = (int) ceil($total / $limit);
+
+        // Use findAll() to respect returnType = ActivityLog::class
+        $offset    = ($page - 1) * $limit;
+        $logs      = $this->findAll($limit, $offset);
+        // Re-apply the same filters since findAll doesn't use the builder above
+        $filteredLogs = array_filter($logs, function ($log) use ($userId, $actionType) {
+            if ($log->user_id !== $userId) return false;
+            if ($actionType && $log->action !== $actionType) return false;
+            return true;
+        });
+
+        return [
+            'logs'       => array_values($filteredLogs),
+            'total'      => $total,
+            'total_pages' => $totalPages,
         ];
-
-        $result['total_pages'] = (int) ceil($result['total'] / $limit);
-
-        return $result;
     }
 
     /**

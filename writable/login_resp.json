@@ -1,0 +1,11 @@
+{
+    "status": "success",
+    "message": "Login successful.",
+    "data": {
+        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjUsImVtYWlsIjoic3RvcmFnZXRlc3RAZXhhbXBsZS5jb20iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc5NzIxMTIzLCJleHAiOjE3Nzk3MjQ3MjN9.hukgwOGgarxvb69uj8Pt3V1pJcO8GxbNtNWHOibeeqk",
+        "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjUsImVtYWlsIjoic3RvcmFnZXRlc3RAZXhhbXBsZS5jb20iLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTc3OTcyMTEyMywiZXhwIjoxNzgyMzEzMTIzfQ.MOL5HF-x6X7Ok4-MY_BHQqtzjl1qb9kCKcBTE0URcXo",
+        "token_type": "bearer",
+        "expires_in": 3600
+    },
+    "errors": null
+}

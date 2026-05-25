@@ -42,7 +42,8 @@ $routes->group('api/v1', [
 
         // Storage
         $routes->get('storage',                   'StorageController::index');
-        $routes->post('storage/rent',              'StorageController::rent');
+        $routes->post('storage/rent',             'StorageController::rent');
+        $routes->get('storage/rentals',           'StorageController::rentals');
 
         // Credentials
         $routes->get('credentials',               'CredentialsController::index');
@@ -52,6 +53,10 @@ $routes->group('api/v1', [
         $routes->get('logs',                     'LogsController::index');
     });
 });
+
+// Content-only routes for AJAX page loading (without layout wrapper)
+// Registered BEFORE spa_fallback so they match before {path} catches them
+$routes->get('content/(:segment)', 'Home::content/$1', ['as' => 'page_content']);
 
 // SPA fallback — unmatched routes go to index (hash routing handles pages)
 $routes->get('{path}', 'Home::index', ['as' => 'spa_fallback']);

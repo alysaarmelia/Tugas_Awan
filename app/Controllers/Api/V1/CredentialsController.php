@@ -20,7 +20,8 @@ class CredentialsController extends BaseApiController
 
     /**
      * GET /api/v1/credentials
-     * Returns masked credentials for the authenticated user.
+     * Returns masked credentials. secret_key is always null — only revealed
+     * transiently via the regenerate endpoint on the moment of creation.
      */
     public function index(): \CodeIgniter\HTTP\ResponseInterface
     {
@@ -40,7 +41,8 @@ class CredentialsController extends BaseApiController
 
     /**
      * POST /api/v1/credentials/regenerate
-     * Regenerates Access Key + Secret Key for the authenticated user.
+     * Regenerates Access Key + Secret Key. Full keys are ONLY returned here.
+     * The secret_key cannot be retrieved again — only via next regen.
      */
     public function regenerate(): \CodeIgniter\HTTP\ResponseInterface
     {
@@ -56,9 +58,12 @@ class CredentialsController extends BaseApiController
         }
 
         return $this->success([
-            'message'     => 'Credentials regenerated successfully.',
-            'access_key'  => $result['data']['access_key'],
-            'secret_key'  => $result['data']['secret_key'],
+            'message'              => 'Credentials regenerated successfully.',
+            'access_key'           => $result['data']['access_key'],
+            'secret_key'           => $result['data']['secret_key'],
+            'masked_ak'            => $result['data']['masked_ak'],
+            'masked_sk'            => $result['data']['masked_sk'],
+            'can_reveal_sk_until' => $result['data']['can_reveal_sk_until'],
         ]);
     }
 }

@@ -10,12 +10,12 @@ class CreateStorageRentalsTable extends Migration
     {
         $this->forge->addField([
             'id' => [
-                'type'           => 'INT',
+                'type'           => 'INTEGER',
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
             'user_id' => [
-                'type'     => 'INT',
+                'type'     => 'INTEGER',
                 'unsigned' => true,
             ],
             'gb_amount' => [
@@ -28,13 +28,13 @@ class CreateStorageRentalsTable extends Migration
                 'default' => 0.10,
             ],
             'created_at' => [
-                'type' => 'DATETIME',
-                'null' => false,
+                'type'    => 'TIMESTAMP',
+                'null'    => false,
             ],
         ]);
         $this->forge->addPrimaryKey('id');
         $this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE');
-        $this->forge->createTable('storage_rentals');
+        $this->forge->createTable('storage_rentals', true);
 
         $this->db->query('CREATE INDEX idx_storage_rentals_user_id ON storage_rentals(user_id)');
         $this->db->query('CREATE INDEX idx_storage_rentals_created_at ON storage_rentals(created_at DESC)');

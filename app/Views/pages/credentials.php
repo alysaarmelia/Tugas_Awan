@@ -1,6 +1,3 @@
-<?php $this->extend('layouts/main'); ?>
-
-<?php $this->section('content'); ?>
 <div id="credentialsPage" class="fade-in">
     <!-- Header -->
     <div class="mb-6">
@@ -9,7 +6,7 @@
     </div>
 
     <!-- Info banner -->
-    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 flex items-start gap-3">
+    <div id="credBanner" class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 flex items-start gap-3">
         <i class="fas fa-info-circle text-blue-600 mt-0.5"></i>
         <div class="text-sm text-blue-800">
             <p class="font-medium">Store these credentials securely</p>
@@ -28,7 +25,7 @@
                     </div>
                     <div>
                         <h4 class="font-semibold text-slate-800">Access Key</h4>
-                        <p class="text-xs text-slate-400">Public identifier</p>
+                        <p class="text-xs text-slate-400">Can be revealed on this page</p>
                     </div>
                 </div>
                 <button id="revealAK" class="text-blue-600 hover:text-blue-700 text-xs font-medium flex items-center gap-1">
@@ -52,18 +49,15 @@
                     </div>
                     <div>
                         <h4 class="font-semibold text-slate-800">Secret Key</h4>
-                        <p class="text-xs text-slate-400">Keep this secret</p>
+                        <p class="text-xs text-slate-400">Shown only once after regen</p>
                     </div>
                 </div>
-                <button id="revealSK" class="text-blue-600 hover:text-blue-700 text-xs font-medium flex items-center gap-1">
-                    <i class="fas fa-eye"></i> Reveal
-                </button>
             </div>
             <div class="bg-slate-50 rounded-lg p-4 font-mono text-sm break-all" id="skValue">
                 <i class="fas fa-spinner fa-spin text-slate-400"></i> Loading...
             </div>
-            <button id="copySK" class="mt-3 w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
-                <i class="fas fa-copy"></i> Copy Secret Key
+            <button id="copySK" class="mt-3 w-full bg-slate-100 text-slate-400 py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-2 opacity-50 cursor-not-allowed" disabled>
+                <i class="fas fa-copy"></i> Copy Secret Key <span class="text-xs">(only after regen)</span>
             </button>
         </div>
     </div>
@@ -124,4 +118,3 @@
         </div>
     </div>
 </div>
-<?php $this->endSection(); ?>

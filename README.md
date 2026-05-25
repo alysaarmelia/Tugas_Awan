@@ -53,7 +53,7 @@ The IaaS Cloud Portal allows users to:
 |---|---|---|
 | Backend Framework | CodeIgniter | 4.7 |
 | PHP Version | PHP | 8.2+ |
-| Database | MySQLi (configurable to PostgreSQL/SQLite) | — |
+| Database | PostgreSQL | 14+ |
 | Authentication | Custom JWT (HS256, native PHP) | — |
 | Frontend | Vanilla JavaScript + Tailwind CSS (CDN) | ES Modules |
 | Icons | Font Awesome | 6.5 |
@@ -123,8 +123,8 @@ amer-muzan/
 
 ### Prerequisites
 
-- **PHP 8.2+** with extensions: `intl`, `mbstring`, `json`, `mysqlnd`, `libcurl`
-- **MySQL 5.7+** (or MariaDB 10.3+)
+- **PHP 8.2+** with extensions: `intl`, `mbstring`, `json`, `pgsql`, `libcurl`
+- **PostgreSQL 14+** (running on localhost:5432)
 - **Composer** (for CodeIgniter dependencies)
 
 ### Steps
@@ -139,21 +139,19 @@ composer install
 # 3. Copy environment file
 cp env .env
 
-# 4. Create the database
-mysql -u root -p -e "CREATE DATABASE iaas_portal CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;"
+# 4. Create the database (requires psql in PATH, or use pgAdmin/DBeaver)
+psql -U postgres -c "CREATE DATABASE iaas_portal;"
 
-# 5. Update .env with your credentials
-#    database.default.hostname  = localhost
-#    database.default.database  = iaas_portal
-#    database.default.username  = root
-#    database.default.password  = your_password
-
-# 6. Run migrations (creates all 5 tables)
+# 5. Run migrations (creates all 5 tables)
 php spark migrate
 
-# 7. Start the development server
+# 6. Start the development server
 php spark serve
 ```
+
+Visit [http://localhost:8080](http://localhost:8080)
+
+> **Note:** PostgreSQL 17 must be running on localhost:5432. Connect with pgAdmin/DBeaver at `localhost:5432` user `postgres`.
 
 Visit [http://localhost:8080](http://localhost:8080)
 
@@ -171,9 +169,10 @@ app.baseURL    = 'http://localhost:8080'
 # Database
 database.default.hostname = localhost
 database.default.database = iaas_portal
-database.default.username = root
-database.default.password = your_password
-database.default.DBDriver = MySQLi
+database.default.username = postgres
+database.default.password = postgres
+database.default.DBDriver = Postgre
+database.default.port     = 5432
 
 # JWT
 jwt.secret           = "your-very-long-random-secret-key"

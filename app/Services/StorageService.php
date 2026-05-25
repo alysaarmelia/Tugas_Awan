@@ -77,13 +77,14 @@ class StorageService
             ];
         }
 
-        // Check if user has active subscription
-        if (!$this->userService->hasActiveSubscription($userId)) {
-            return [
-                'success' => false,
-                'error'   => 'No active subscription. Please select a subscription plan first.',
-                'data'    => null,
-            ];
+        // Check if user has subscription — auto-create free if missing
+        if (!$this->subscriptionModel->findByUserId($userId)) {
+            $this->subscriptionModel->insert([
+                'user_id'    => $userId,
+                'tier'       => 'free',
+                'status'     => 'active',
+                'start_date' => date('Y-m-d H:i:s'),
+            ]);
         }
 
         // Create rental
@@ -118,6 +119,14 @@ class StorageService
      */
     public function getRentals(int $userId): array
     {
-        return $this->rentalModel->findByUserId($userId);
+        $rentals = $this->rentalModel->findByUserId($userId);
+        return array_map(fn($r) => [
+            'id'          => $r->id,
+            'gb_amount'   => $r->gb_amount,
+            'price_per_gb'=> $r->price_per_gb,
+            'created_at'  => is_object($r->created_at)
+                ? $r->created_at->format('Y-m-d H:i:s')
+                : $r->created_at,
+        ], $rentals);
     }
 }

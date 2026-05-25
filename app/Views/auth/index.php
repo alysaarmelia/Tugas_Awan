@@ -1,9 +1,24 @@
 <?php
+// Standalone auth page — no layout wrapper needed
 $is_auth_page = true;
-$this->extend('layouts/main');
-?>
+?><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IaaS Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Inter', system-ui, sans-serif; }</style>
+</head>
+<body>
+<!-- Toast notification -->
+<div id="toast" class="fixed top-4 right-4 z-50 hidden">
+    <div id="toastContent" class="bg-slate-800 text-white px-5 py-3 rounded-lg shadow-lg flex items-center gap-3 text-sm"></div>
+</div>
 
-<?php $this->section('content'); ?>
 <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 px-4">
     <div class="w-full max-w-md">
         <!-- Logo -->
@@ -83,4 +98,7 @@ $this->extend('layouts/main');
         </p>
     </div>
 </div>
-<?php $this->endSection(); ?>
+
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>

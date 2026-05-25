@@ -35,6 +35,13 @@ const API = {
         if (!res.ok) {
             // Try to extract message from CI4-API envelope
             const msg = data?.message || data?.detail || `HTTP ${res.status}`;
+            // If there are field-level errors, prepend them to the message
+            if (data?.errors) {
+                const fieldErrors = Object.entries(data.errors)
+                    .map(([k, v]) => `${k}: ${v}`)
+                    .join(' • ');
+                throw new Error(`${msg} — ${fieldErrors}`);
+            }
             throw new Error(msg);
         }
 
@@ -90,7 +97,7 @@ const Auth = {
             await API.post('/auth/logout', {});
         } catch (_) { /* ignore */ }
         this.clear();
-        Router.navigate('/');
+        window.location.href = '/';
     },
 
     async fetchAndStoreUser() {
@@ -156,36 +163,37 @@ const Router = {
     },
 
     navigate(path) {
-        history.pushState(null, '', window.location.origin + path);
+        // Remove leading slash, then prepend origin + /
+        const cleanPath = path.replace(/^\/+/, '');
+        history.pushState(null, '', window.location.origin + '/' + cleanPath);
         this.handleRoute(path);
     },
 
     handleRoute(path = window.location.hash.slice(1) || '/') {
         if (!Auth.isAuthenticated() && path !== '/') {
-            this.navigate('/');
+            window.location.href = '/';
             return;
         }
         const page = this.routes[path] || 'dashboard';
+        // For hash navigation, update URL so browser back/forward works
+        history.pushState(null, '', window.location.origin + '/' + path.replace(/^\/+/, ''));
         this.loadPage(page);
     },
 
     async loadPage(pageName) {
         try {
-            const res  = await fetch(`/js/pages/${pageName}.js`);
+            const res  = await fetch(`/content/${pageName}`);
             if (!res.ok) throw new Error('Page not found');
-            const code = await res.text();
-            eval(code); // page script sets up DOM and loads data
+            const html = await res.text();
+            document.getElementById('pageContent').innerHTML = html;
+
+            const jsRes = await fetch(`/js/pages/${pageName}.js`);
+            if (jsRes.ok) eval(await jsRes.text());
         } catch (e) {
             const el = document.getElementById('pageContent');
-            if (el) {
-                el.innerHTML = `<div class="text-center py-20 text-slate-400">
-                    <i class="fas fa-exclamation-triangle text-3xl mb-3"></i>
-                    <p>${e.message}</p>
-                </div>`;
-            }
+            if (el) el.innerHTML = `<div class="text-center py-20 text-slate-400"><i class="fas fa-exclamation-triangle text-3xl mb-3"></i><p>${e.message}</p></div>`;
         }
 
-        // Highlight active sidebar link
         document.querySelectorAll('.sidebar-link').forEach(link => {
             link.classList.remove('active');
             if (link.dataset.page === pageName) link.classList.add('active');
@@ -221,12 +229,19 @@ const UI = {
 
     formatDate(dateStr) {
         if (!dateStr) return '--';
-        return new Date(dateStr).toLocaleDateString('en-US', {
+        // Handle CI4 datetime object: { date: "2026-05-25 12:52:18.000000", timezone_type: 3, timezone: "UTC" }
+        const d = typeof dateStr === 'object' ? dateStr.date : dateStr;
+        return new Date(d).toLocaleDateString('en-US', {
             year: 'numeric', month: 'short', day: 'numeric',
             hour: '2-digit', minute: '2-digit',
         });
     },
 };
+
+// Expose shared utilities to window so eval()'d page scripts can access them
+window.API  = API;
+window.Toast = Toast;
+window.UI   = UI;
 
 // ================================================================
 // Auth Page Init (login / register tabs)
@@ -276,7 +291,7 @@ async function initAuthPage() {
         try {
             await Auth.login(email, pass);
             showAlert('Login successful!', 'success');
-            setTimeout(() => Router.navigate('/dashboard'), 800);
+            setTimeout(() => { window.location.href = '/dashboard'; }, 800);
         } catch (err) {
             showAlert(err.message);
             btn.disabled = false;
@@ -324,8 +339,36 @@ async function init() {
     UI.updateUserInfo();
     document.getElementById('logoutBtn')?.addEventListener('click', () => Auth.logout());
 
-    window.addEventListener('hashchange', () => Router.handleRoute());
-    Router.handleRoute();
+    // Detect which page is showing and load its JS to fetch API data
+    const pageEl = document.getElementById('dashboardPage')
+        || document.getElementById('storagePage')
+        || document.getElementById('credentialsPage')
+        || document.getElementById('subscriptionPage')
+        || document.getElementById('logsPage');
+
+    if (pageEl) {
+        const pageMap = {
+            'dashboardPage':   'dashboard',
+            'storagePage':     'storage',
+            'credentialsPage': 'credentials',
+            'subscriptionPage':'subscription',
+            'logsPage':        'logs',
+        };
+        const pageName = pageMap[pageEl.id];
+        if (pageName) {
+            const jsRes = await fetch(`/js/pages/${pageName}.js`);
+            if (jsRes.ok) eval(await jsRes.text());
+        }
+    }
+
+    // Intercept all hash-link clicks (Quick Actions, "Manage →", etc.) and do full page nav
+    document.addEventListener('click', (e) => {
+        const a = e.target.closest('a[href^="#/"]');
+        if (a) {
+            e.preventDefault();
+            window.location.href = a.getAttribute('href').replace(/^#/, '');
+        }
+    });
 }
 
 init();

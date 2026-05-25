@@ -1,6 +1,3 @@
-<?php $this->extend('layouts/main'); ?>
-
-<?php $this->section('content'); ?>
 <div id="logsPage" class="fade-in">
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
@@ -61,4 +58,3 @@
         </div>
     </div>
 </div>
-<?php $this->endSection(); ?>

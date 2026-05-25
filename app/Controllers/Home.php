@@ -16,7 +16,7 @@ class Home extends BaseController
      */
     public function dashboard(): string
     {
-        return view('layouts/main', ['page' => 'dashboard']);
+        return view('layouts/main', ['page' => 'dashboard', 'pageContent' => view('pages/dashboard')]);
     }
 
     /**
@@ -24,7 +24,7 @@ class Home extends BaseController
      */
     public function storage(): string
     {
-        return view('layouts/main', ['page' => 'storage']);
+        return view('layouts/main', ['page' => 'storage', 'pageContent' => view('pages/storage')]);
     }
 
     /**
@@ -32,7 +32,7 @@ class Home extends BaseController
      */
     public function credentials(): string
     {
-        return view('layouts/main', ['page' => 'credentials']);
+        return view('layouts/main', ['page' => 'credentials', 'pageContent' => view('pages/credentials')]);
     }
 
     /**
@@ -40,7 +40,7 @@ class Home extends BaseController
      */
     public function subscription(): string
     {
-        return view('layouts/main', ['page' => 'subscription']);
+        return view('layouts/main', ['page' => 'subscription', 'pageContent' => view('pages/subscription')]);
     }
 
     /**
@@ -48,6 +48,23 @@ class Home extends BaseController
      */
     public function logs(): string
     {
-        return view('layouts/main', ['page' => 'logs']);
+        return view('layouts/main', ['page' => 'logs', 'pageContent' => view('pages/logs')]);
+    }
+
+    /**
+     * Content-only AJAX route for hash-based SPA navigation
+     * Renders just the page content without the layout wrapper
+     */
+    public function content(string $page = ''): \CodeIgniter\HTTP\ResponseInterface
+    {
+        $validPages = ['dashboard', 'storage', 'credentials', 'subscription', 'logs'];
+        if (!in_array($page, $validPages)) {
+            return $this->response->setStatusCode(404)->setJSON(['error' => 'Not found']);
+        }
+
+        return $this->response->setJSON([
+            'html' => view("pages/{$page}"),
+            'page' => $page,
+        ]);
     }
 }

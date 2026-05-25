@@ -45,7 +45,7 @@ class StorageController extends BaseApiController
         $body = $this->getBody();
 
         if (!$this->validate([
-            'amount_gb' => "required|integer|greater_than[0]|less_than_equal_to[100]",
+            'amount_gb' => 'required|integer|greater_than[0]|less_than_equal_to[100]',
         ])) {
             return $this->validationError($this->validator->getErrors());
         }
@@ -59,8 +59,21 @@ class StorageController extends BaseApiController
         return $this->success([
             'message'            => 'Storage rental successful.',
             'amount_gb'          => $result['data']['amount_gb'],
-            'cost_usd'           => $result['data']['cost_usd'],
+            'cost_usd'           => round($result['data']['cost_usd'], 2),
             'new_total_quota_gb' => $result['data']['new_total_quota_gb'],
         ]);
+    }
+
+    /**
+     * GET /api/v1/storage/rentals
+     */
+    public function rentals(): \CodeIgniter\HTTP\ResponseInterface
+    {
+        $userId = $this->requireAuth();
+        if ($userId instanceof \CodeIgniter\HTTP\ResponseInterface) {
+            return $userId;
+        }
+
+        return $this->success($this->storageService->getRentals($userId));
     }
 }

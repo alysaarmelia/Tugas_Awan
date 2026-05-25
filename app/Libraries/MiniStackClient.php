@@ -69,6 +69,28 @@ class MiniStackClient
     }
 
     /**
+     * Mask an Access Key — show first 2 + last 4 chars only.
+     */
+    public function maskAccessKey(string $key): string
+    {
+        if (strlen($key) <= 6) {
+            return str_repeat('•', strlen($key));
+        }
+        return substr($key, 0, 2) . str_repeat('•', strlen($key) - 6) . substr($key, -4);
+    }
+
+    /**
+     * Mask a Secret Key — show first 2 + last 4 chars only.
+     */
+    public function maskSecretKey(string $key): string
+    {
+        if (strlen($key) <= 6) {
+            return str_repeat('•', strlen($key));
+        }
+        return substr($key, 0, 2) . str_repeat('•', strlen($key) - 6) . substr($key, -4);
+    }
+
+    /**
      * Generate bucket name for a user.
      */
     private function generateBucketName(int $userId): string

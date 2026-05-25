@@ -10,12 +10,12 @@ class CreateUserCredentialsTable extends Migration
     {
         $this->forge->addField([
             'id' => [
-                'type'           => 'INT',
+                'type'           => 'INTEGER',
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
             'user_id' => [
-                'type'     => 'INT',
+                'type'     => 'INTEGER',
                 'unsigned' => true,
                 'unique'   => true,
             ],
@@ -34,17 +34,17 @@ class CreateUserCredentialsTable extends Migration
                 'unique'     => true,
             ],
             'created_at' => [
-                'type' => 'DATETIME',
+                'type' => 'TIMESTAMP',
                 'null' => false,
             ],
             'last_regenerated' => [
-                'type' => 'DATETIME',
+                'type' => 'TIMESTAMP',
                 'null' => true,
             ],
         ]);
         $this->forge->addPrimaryKey('id');
         $this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE');
-        $this->forge->createTable('user_credentials');
+        $this->forge->createTable('user_credentials', true);
 
         $this->db->query('CREATE INDEX idx_user_credentials_user_id ON user_credentials(user_id)');
         $this->db->query('CREATE INDEX idx_user_credentials_access_key ON user_credentials(access_key)');

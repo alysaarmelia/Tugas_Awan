@@ -28,7 +28,7 @@
 </div>
 
 <?php if (isset($is_auth_page) && $is_auth_page): ?>
-    <!-- Auth pages (no sidebar) -->
+    <!-- Auth pages — use renderSection so auth/index.php section renders -->
     <?= $this->renderSection('content') ?>
 <?php else: ?>
     <!-- Main layout with sidebar -->
@@ -48,19 +48,19 @@
             </div>
 
             <nav class="flex-1 p-3 space-y-1">
-                <a href="#/dashboard" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm hover:bg-slate-800 transition-colors" data-page="dashboard">
+                <a href="/dashboard" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm hover:bg-slate-800 transition-colors" data-page="dashboard">
                     <i class="fas fa-gauge-high w-4 text-center"></i> Dashboard
                 </a>
-                <a href="#/storage" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm hover:bg-slate-800 transition-colors" data-page="storage">
+                <a href="/storage" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm hover:bg-slate-800 transition-colors" data-page="storage">
                     <i class="fas fa-hard-drive w-4 text-center"></i> My Storage
                 </a>
-                <a href="#/credentials" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm hover:bg-slate-800 transition-colors" data-page="credentials">
+                <a href="/credentials" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm hover:bg-slate-800 transition-colors" data-page="credentials">
                     <i class="fas fa-key w-4 text-center"></i> Credentials
                 </a>
-                <a href="#/subscription" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm hover:bg-slate-800 transition-colors" data-page="subscription">
+                <a href="/subscription" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm hover:bg-slate-800 transition-colors" data-page="subscription">
                     <i class="fas fa-credit-card w-4 text-center"></i> Subscription
                 </a>
-                <a href="#/logs" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm hover:bg-slate-800 transition-colors" data-page="logs">
+                <a href="/logs" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm hover:bg-slate-800 transition-colors" data-page="logs">
                     <i class="fas fa-list-check w-4 text-center"></i> Activity Logs
                 </a>
             </nav>
@@ -89,7 +89,7 @@
                 </div>
             </header>
             <div class="p-6" id="pageContent">
-                <?= $this->renderSection('content') ?>
+                <?= $pageContent ?? '' ?>
             </div>
         </main>
     </div>

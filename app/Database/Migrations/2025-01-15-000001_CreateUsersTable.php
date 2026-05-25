@@ -10,7 +10,7 @@ class CreateUsersTable extends Migration
     {
         $this->forge->addField([
             'id' => [
-                'type'           => 'INT',
+                'type'           => 'INTEGER',
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
@@ -29,20 +29,21 @@ class CreateUsersTable extends Migration
                 'constraint' => 255,
             ],
             'created_at' => [
-                'type' => 'DATETIME',
-                'null' => true,
+                'type'    => 'TIMESTAMP',
+                'null'    => false,
+                'default' => null,
             ],
             'updated_at' => [
-                'type' => 'DATETIME',
-                'null' => true,
+                'type'    => 'TIMESTAMP',
+                'null'    => false,
+                'default' => null,
             ],
         ]);
         $this->forge->addPrimaryKey('id');
-        $this->forge->createTable('users');
+        $this->forge->createTable('users', true);
 
-        // Add indexes for 50k+ scalability
-        $this->db->query('CREATE INDEX idx_users_email ON users(email)');
-        $this->db->query('CREATE INDEX idx_users_username ON users(username)');
+        $this->db->query('CREATE UNIQUE INDEX idx_users_email ON users(email)');
+        $this->db->query('CREATE UNIQUE INDEX idx_users_username ON users(username)');
     }
 
     public function down()
