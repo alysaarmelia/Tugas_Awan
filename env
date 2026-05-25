@@ -1,0 +1,51 @@
+#--------------------------------------------------------------------
+# ENVIRONMENT
+#--------------------------------------------------------------------
+CI_ENVIRONMENT = development
+
+#--------------------------------------------------------------------
+# APP
+#--------------------------------------------------------------------
+app.baseURL = 'http://localhost:8080'
+app.forceGlobalSecureRequests = false
+
+#--------------------------------------------------------------------
+# DATABASE
+#--------------------------------------------------------------------
+database.default.hostname = localhost
+database.default.database = iaas_portal
+database.default.username = root
+database.default.password = root
+database.default.DBDriver = MySQLi
+database.default.DBPrefix =
+database.default.port = 3306
+
+#--------------------------------------------------------------------
+# ENCRYPTION
+#--------------------------------------------------------------------
+encryption.key = "IaaSPortalSecretKey2025SecureTokenGen"
+
+#--------------------------------------------------------------------
+# SESSION
+#--------------------------------------------------------------------
+session.driver = 'CodeIgniter\Session\Handlers\FileHandler'
+session.savePath = writable/session
+session.expiration = 7200
+
+#--------------------------------------------------------------------
+# LOGGER
+#--------------------------------------------------------------------
+logger.threshold = 9
+
+#--------------------------------------------------------------------
+# JWT CONFIG
+#--------------------------------------------------------------------
+jwt.secret = "IaaSPortalJWTSecretKey2025SecureSigning"
+jwt.access_token_ttl = 3600
+jwt.refresh_token_ttl = 2592000
+
+#--------------------------------------------------------------------
+# MINISTACK CONFIG
+#--------------------------------------------------------------------
+ministack.base_url = 'http://localhost:5000/api/v1'
+ministack.timeout = 10
